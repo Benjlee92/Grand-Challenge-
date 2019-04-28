@@ -1,56 +1,72 @@
+#include <vector>
+#include <map>
 #include <iostream>
+#include <algorithm>
+#include <sstream>
+#include <string>
 #include <fstream>
+#include <list>
+
 using namespace std;
-class HashEntry {
-private:
-     int key;
-     int value;
-public:
-     HashEntry(int key, int value) {
-          this->key = key;
-          this->value = value;
+// general case: adjacency list where T is the type of the vertex
+// for each vertex (key in the map), associate with a list of connected vertices
+template< typename T > using graph_type = std::map< T, std::vector<T> > ;
+
+template< typename T > // print a graph
+std::ostream& print( const graph_type<T>& graph, std::ostream& stm = std::cout )
+{
+     // for each pair (vertex, list of connected vertices) in the graph
+     for( const auto& pair : graph )
+     {
+          stm << "vertex " << pair.first << " ---> vertices [ " ;
+          // print each vertex in the list of connected vertices
+          for( const auto& v : pair.second ) stm << v << ' ' ;
+          stm << "]\n" ;
      }
-     int getKey() {
-          return key;
+
+     return stm ;
+}
+
+// create a graph from data in an input stream
+// eg. input of pairs of adjacent vertices of a directed graph
+// 1 7 : edge from 1 -------> 7
+// 2 7 : edge from 2 -------> 7
+// 1 5 : edge from 1 -------> 5
+// etc.
+template< typename T >
+graph_type<T> create( std::istream& stm )
+{
+     graph_type<T> graph ;
+
+     T from, to ;
+     while( stm >> from >> to ) // for each edge  'from' ---> 'to'
+     {
+          graph[from].push_back(to) ; // add 'to' to the set of vertices connected to 'from'
+
+          graph[to] ;
+          // we may not see the vertex 'to' again in the input (there may be
+          // no other edge connected to 'to'), so add it to the map right now
+          // or, for an undirected graph:
+          // graph[to].push_back(from) ;
      }
-     int getValue() {
-          return value;
+
+     /////////////////////////////////////////////////////////////////////////////////////////////////
+     /// comment this out if multiple edges between the same pair of vertices are to be preserved ///
+     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+     // clean up: remove duplicate entries (if any) in lists of connected vertices
+     for( auto& pair : graph ) // for each pair (vertex, list of connected vertices) in the graph
+     {
+          auto& vec = pair.second ; // list of connected vertices
+          std::sort( vec.begin(), vec.end() ) ;
+          vec.erase( std::unique( vec.begin(), vec.end() ), vec.end() ) ;
      }
-};
-const int TABLE_SIZE = 128;
-class HashMap {
-private:
-     HashEntry **table;
-public:
-     HashMap() {
-          table = new HashEntry*[TABLE_SIZE];
-          for (int i = 0; i < TABLE_SIZE; i++)
-          table[i] = NULL;
-     }
-     int get(int key) {
-          int hash = (key % TABLE_SIZE);
-          while (table[hash] != NULL && table[hash]->getKey() != key)
-          hash = (hash + 1) % TABLE_SIZE;
-          if (table[hash] == NULL)
-          return -1;
-          else
-          return table[hash]->getValue();
-     }
-     void put(int key, int value) {
-          int hash = (key % TABLE_SIZE);
-          while (table[hash] != NULL && table[hash]->getKey() != key)
-          hash = (hash + 1) % TABLE_SIZE;
-          if (table[hash] != NULL)
-          delete table[hash];
-          table[hash] = new HashEntry(key, value);
-     }
-     ~HashMap() {
-          for (int i = 0; i < TABLE_SIZE; i++)
-          if (table[i] != NULL)
-          delete table[i];
-          delete[] table;
-     }
-};
+     /////////////////////////////////////////////////////////////////////////////////////////////////
+     /////////////////////////////////////////////////////////////////////////////////////////////////
+     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+     return graph ;
+}
 
 int main() {
      ifstream myReadFile;
@@ -61,6 +77,9 @@ int main() {
      int count = 0;
      string filename = "";
      bool session = true;
+     string temp;
+     string dummyLine; //Need this to skip the first two lines that are not data
+     string finalString;
      while(session == true){
           // Interaction with user
           cout << endl;
@@ -72,27 +91,39 @@ int main() {
           cout << " ---------------------------------------------------------------" << endl;
           // Collect their choice
           cin >> choice;
-
+          //Choice 1 - Enter filename to extract data from
           if(choice == 1){
                cout << "Please enter the file name:" << endl;
                cin >> filename;
           }
+          //Choice 2 - Main algorithm to search tree
           else if (choice == 2 && filename != ""){
                myReadFile.open(filename);
                if (myReadFile.is_open()) {
                     cout << "File opened" << endl;
-                    while (!myReadFile.eof()) {
-                         count += 1;
-                         myReadFile >> output;
-                         HashEntry(count,stoi(output));
-                         cout << output << endl;
+                    getline(myReadFile,dummyLine);//This skips the first line of the file data
+                    getline(myReadFile,dummyLine);//This skips the second line of the file data
+                    while(getline(myReadFile, temp)) // delimiter as space
+                    {
+                         cout << "Temp: " << temp << endl;
+                         stringstream linestream(temp);
 
-                         x = x + stoi(output);
+                         int val1 = 4;
+                         int val2 = 5;
+                         linestream >> val1 >> val2;
+                         cout << "Linestream: " << linestream << endl;
+                         cout << "Val1: " << val1 << " Val2: " << val2 << endl;
+                         finalString += to_string(val1) + " " + to_string(val2) + " ";
+                         cout << "Entered into Hashtable" << endl;
                     }
-                    cout << "Final: " << x << endl;
+                    istringstream stm(finalString);
+                    const graph_type<string> graph = create<string>(stm);
+                    print(graph);
+
                }
                myReadFile.close();
           }
+          //Choice 3 - Quit
           else if(choice == 3){
                cout << "Thanks for using our services" << endl;
                session = false;
