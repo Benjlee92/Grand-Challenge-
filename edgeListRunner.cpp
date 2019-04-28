@@ -108,8 +108,8 @@ int main() {
                          cout << "Temp: " << temp << endl;
                          stringstream linestream(temp);
 
-                         int val1 = 4;
-                         int val2 = 5;
+                         int val1;
+                         int val2;
                          linestream >> val1 >> val2;
                          cout << "Linestream: " << linestream << endl;
                          cout << "Val1: " << val1 << " Val2: " << val2 << endl;
