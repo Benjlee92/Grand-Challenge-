@@ -18,7 +18,7 @@ std::ostream& print( const graph_type<T>& graph, std::ostream& stm = std::cout )
      // for each pair (vertex, list of connected vertices) in the graph
      for( const auto& pair : graph )
      {
-          stm << "vertex " << pair.first << " ---> vertices [ " ;
+          stm << "vertex" << pair.first << " ---> [ " ;
           // print each vertex in the list of connected vertices
           for( const auto& v : pair.second ) stm << v << ' ' ;
           stm << "]\n" ;
@@ -80,6 +80,8 @@ int main() {
      string temp;
      string dummyLine; //Need this to skip the first two lines that are not data
      string finalString;
+     string answer;
+     string exportFileName;
      while(session == true){
           // Interaction with user
           cout << endl;
@@ -119,7 +121,15 @@ int main() {
                     istringstream stm(finalString);
                     const graph_type<string> graph = create<string>(stm);
                     print(graph);
-
+                    cout << "Would you like to export this to a file? [Y/N]" << endl;
+                    cin >> answer;
+                    if(answer == "Y"){
+                         cout << "What would you like to name the file?" << endl;
+                         cin >> exportFileName;
+                         ofstream out(exportFileName);
+                         out << print(graph);
+                         out.close();
+                    }
                }
                myReadFile.close();
           }
