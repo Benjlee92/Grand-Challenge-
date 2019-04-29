@@ -10,8 +10,8 @@ To run it how I (Keaton) am testing it first download the most updated files, if
 
 Then select option 1 by entering '1' - this asks you what file you wish to open up
 
-Enter the file 'testcount.txt' - this is just a simple text file to see if it will open up
+Enter the file 'graph3.net' - this is most complex graph we have
 
-Then you are brought back to the menu, now select option 2 by pressing '2' - this will run the 'Dynamically Localized BFS Algorithm', that we still need to write, and then it spits out some BS which just is what is stored in the file.
+Then you are brought back to the menu, now select option 2 by pressing '2' - this will run the 'EdgeList Algorithm'.
 
 Message me if you have any questions or need help.

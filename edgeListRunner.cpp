@@ -83,12 +83,12 @@ int main() {
      while(session == true){
           // Interaction with user
           cout << endl;
-          cout << " ---------------------------------------------------------------" << endl;
-          cout << "|Hello what would you like to do?                               |" << endl;
-          cout << "|1) Insert File name                                            |" << endl;
-          cout << "|2) Run the Dynamically Localized Breath-First-Search algorithm.|" << endl;
-          cout << "|3) Quit                                                        |" << endl;
-          cout << " ---------------------------------------------------------------" << endl;
+          cout << " ----------------------------------------------------------------" << endl;
+          cout << "|Hello what would you like to do?                                |" << endl;
+          cout << "| 1) Insert a file name                                          |" << endl;
+          cout << "| 2) Run the EdgeList Algorithm.                                 |" << endl;
+          cout << "| 3) Quit                                                        |" << endl;
+          cout << " ----------------------------------------------------------------" << endl;
           // Collect their choice
           cin >> choice;
           //Choice 1 - Enter filename to extract data from
