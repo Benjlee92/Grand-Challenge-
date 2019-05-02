@@ -16,16 +16,19 @@ template< typename T > using graph_type = map< T, vector<T> >;
 template< typename T > // print a graph
 ostream& print( const graph_type<T>& graph, ostream& stm = cout )
 {
+
      // for each pair (vertex, list of connected vertices, number of connections) in the graph
      for( const auto& pair : graph )
      {
-          stm << "vertex " << pair.first << " ---> [ " ;
+          int forCount = 0;
+          stm <<  pair.first << " [ " ;
           // print each vertex in the list of connected vertices
           for( const auto& v : pair.second ){
                stm << v << ' ' ;
+               forCount++;
 
           }
-          stm << "]\n" ;
+          stm << "] {" << forCount <<"}\n" ;
      }
 
      return stm ;
@@ -40,20 +43,22 @@ ostream& print( const graph_type<T>& graph, ostream& stm = cout )
 template< typename T >
 graph_type<T> create( istream& stm )
 {
+     int forCount = 0;
      graph_type<T> graph ;
-
      T from, to;
      while( stm >> from >> to ) // for each edge  'from' ---> 'to'
      {
+          forCount++;
           graph[from].push_back(to); // add 'to' to the set of vertices connected to 'from'
           graph[to];
-          graph[to].push_back(from) ;
-          graph[from];
           // we may not see the vertex 'to' again in the input (there may be
           // no other edge connected to 'to'), so add it to the map right now
           // or, for an undirected graph:
-          // graph[to].push_back(from) ;
+          graph[to].push_back(from);
+
+
      }
+
 
      /////////////////////////////////////////////////////////////////////////////////////////////////
      /// comment this out if multiple edges between the same pair of vertices are to be preserved ///
@@ -63,7 +68,7 @@ graph_type<T> create( istream& stm )
      for( auto& pair : graph ) // for each pair (vertex, list of connected vertices) in the graph
      {
           auto& vec = pair.second ; // list of connected vertices
-          std::sort( vec.begin(), vec.end() ) ;
+          sort( vec.begin(), vec.end() ) ;
           vec.erase( std::unique( vec.begin(), vec.end() ), vec.end() ) ;
 
      }
@@ -75,37 +80,6 @@ graph_type<T> create( istream& stm )
      return graph ;
 }
 
-template< typename T >
-graph_type<T> SortIntoBuckets( istream& stm )
-{
-     graph_type<T> graph ;
-
-     T from, to ;
-     while( stm >> from >> to ) // for each edge  'from' ---> 'to'
-     {
-          graph[from].push_back(to) ;
-           // add 'to' to the set of vertices connected to 'from'
-          graph[to] ;
-
-
-          // we may not see the vertex 'to' again in the input (there may be
-          // no other edge connected to 'to'), so add it to the map right now
-          // or, for an undirected graph:
-          // graph[to].push_back(from) ;
-     }
-
-     /////////////////////////////////////////////////////////////////////////////////////////////////
-     /// comment this out if multiple edges between the same pair of vertices are to be preserved ///
-     /////////////////////////////////////////////////////////////////////////////////////////////////
-
-     // clean up: remove duplicate entries (if any) in lists of connected vertices
-
-     /////////////////////////////////////////////////////////////////////////////////////////////////
-     /////////////////////////////////////////////////////////////////////////////////////////////////
-     /////////////////////////////////////////////////////////////////////////////////////////////////
-
-     return graph ;
-}
 
 int main() {
      ifstream myReadFile;
@@ -141,7 +115,6 @@ int main() {
           else if (choice == 2 && filename != ""){
                myReadFile.open(filename);
                if (myReadFile.is_open()) {
-                    cout << "File opened" << endl;
                     getline(myReadFile,dummyLine);//This skips the first line of the file data
                     getline(myReadFile,dummyLine);//This skips the second line of the file data
                     while(getline(myReadFile, temp)) // delimiter as space
