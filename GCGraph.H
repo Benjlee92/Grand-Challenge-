@@ -12,7 +12,7 @@ struct adjVertex{
 };
 
 struct vertex{
-    std::string name;
+    int name;
     std::vector<adjVertex> adj;
 };
 
@@ -42,7 +42,8 @@ class Graph
         //void addVertex(int name);
         //void displayEdges();
         void buildVertexList();
-        void addVertex();
+        void addVertex(int name);
+        void addEdge(int v1, int v2);
         void addAdjVertex(vertex );
         void addThree();
         void ThreeLineAdd();
