@@ -20,7 +20,7 @@ struct graphNode{
 	int neighborWeights;
 	std::vector<vertex> vert;
 	int size = vert.size();
-	std::list<int> edge;
+	std::list<std::list<int> > edges;
 	int edgeNum;
 	graphNode *next;
 };
