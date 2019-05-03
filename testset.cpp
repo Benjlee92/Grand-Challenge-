@@ -24,9 +24,10 @@ int patternSort(int x)
      for(int i = 0; i < 8; i++){
           for (int j = 0; j < 28; j++){
                     if(convertedArray[j][0] == i){
-                         cout << "equal" <<  endl;
+                         countOccur++;
                     }
           }
+
      }
      // set1.insert(40);
      // set1.insert(30);

@@ -6,7 +6,7 @@
 #include <queue>
 using namespace std;
 
-int main(){
+int main(int argc, char* argv[]){
 
 	Graph Chal;
 
@@ -14,7 +14,7 @@ int main(){
 	int vert[2000] = {0};
 
 	ifstream myFile;
-	myFile.open("graph3.net"); //some test graph.net
+	myFile.open("graph3.net");//argv[1]); //some test graph.net
 
 	string v1;
 	string v2;
