@@ -13,7 +13,11 @@ using namespace std;
 
 
 void GCGraph::buildVertexList();
-void GCGraph::addAdjVertex(vertex );
+void GCGraph::addAdjVertex(string vertex){
+     vertex v;
+     v.name = n;
+     verticies.push_back(v)
+}
 void GCGraph::addThree();
 void GCGraph::ThreeLineAdd();
 void GCGraph::TriangleAdd();

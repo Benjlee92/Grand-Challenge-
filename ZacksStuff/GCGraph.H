@@ -6,8 +6,8 @@
 struct vertex;
 
 struct adjVertex{
-    vertex *v;
-    int weight;
+    string name;
+    vector<adjVertex> adj;
 };
 
 struct vertex{
