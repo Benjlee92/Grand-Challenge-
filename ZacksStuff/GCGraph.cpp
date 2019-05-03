@@ -7,6 +7,11 @@ using namespace std;
 
 
 void GCGraph::buildVertexList();
+void GCGraph::addVerrtex(std::string n){
+    vertex v;
+    v.name = n;
+    vertices.push_back(v);
+}
 void GCGraph::addAdjVertex(vertex );
 void GCGraph::addThree();
 void GCGraph::ThreeLineAdd();
