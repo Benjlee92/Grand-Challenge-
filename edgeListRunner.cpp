@@ -8,19 +8,23 @@
 #include <list>
 
 using namespace std;
+
 // general case: adjacency list where T is the type of the vertex
-// for each vertex (key in the map), associate with a list of connected vertices
-template< typename T > using graph_type = std::map< T, std::vector<T> > ;
+// for each vertex (key in the map), associate with a list of connected vertices, and how many connections
+template< typename T > using graph_type = map< T, vector<T> >;
 
 template< typename T > // print a graph
-std::ostream& print( const graph_type<T>& graph, std::ostream& stm = std::cout )
+ostream& print( const graph_type<T>& graph, ostream& stm = cout )
 {
-     // for each pair (vertex, list of connected vertices) in the graph
+     // for each pair (vertex, list of connected vertices, number of connections) in the graph
      for( const auto& pair : graph )
      {
-          stm << "vertex" << pair.first << " ---> [ " ;
+          stm << "vertex " << pair.first << " ---> [ " ;
           // print each vertex in the list of connected vertices
-          for( const auto& v : pair.second ) stm << v << ' ' ;
+          for( const auto& v : pair.second ){
+               stm << v << ' ' ;
+
+          }
           stm << "]\n" ;
      }
 
@@ -34,16 +38,17 @@ std::ostream& print( const graph_type<T>& graph, std::ostream& stm = std::cout )
 // 1 5 : edge from 1 -------> 5
 // etc.
 template< typename T >
-graph_type<T> create( std::istream& stm )
+graph_type<T> create( istream& stm )
 {
      graph_type<T> graph ;
 
-     T from, to ;
+     T from, to;
      while( stm >> from >> to ) // for each edge  'from' ---> 'to'
      {
-          graph[from].push_back(to) ; // add 'to' to the set of vertices connected to 'from'
-
-          graph[to] ;
+          graph[from].push_back(to); // add 'to' to the set of vertices connected to 'from'
+          graph[to];
+          graph[to].push_back(from) ;
+          graph[from];
           // we may not see the vertex 'to' again in the input (there may be
           // no other edge connected to 'to'), so add it to the map right now
           // or, for an undirected graph:
@@ -60,7 +65,41 @@ graph_type<T> create( std::istream& stm )
           auto& vec = pair.second ; // list of connected vertices
           std::sort( vec.begin(), vec.end() ) ;
           vec.erase( std::unique( vec.begin(), vec.end() ), vec.end() ) ;
+
      }
+
+     /////////////////////////////////////////////////////////////////////////////////////////////////
+     /////////////////////////////////////////////////////////////////////////////////////////////////
+     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+     return graph ;
+}
+
+template< typename T >
+graph_type<T> SortIntoBuckets( istream& stm )
+{
+     graph_type<T> graph ;
+
+     T from, to ;
+     while( stm >> from >> to ) // for each edge  'from' ---> 'to'
+     {
+          graph[from].push_back(to) ;
+           // add 'to' to the set of vertices connected to 'from'
+          graph[to] ;
+
+
+          // we may not see the vertex 'to' again in the input (there may be
+          // no other edge connected to 'to'), so add it to the map right now
+          // or, for an undirected graph:
+          // graph[to].push_back(from) ;
+     }
+
+     /////////////////////////////////////////////////////////////////////////////////////////////////
+     /// comment this out if multiple edges between the same pair of vertices are to be preserved ///
+     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+     // clean up: remove duplicate entries (if any) in lists of connected vertices
+
      /////////////////////////////////////////////////////////////////////////////////////////////////
      /////////////////////////////////////////////////////////////////////////////////////////////////
      /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -75,7 +114,7 @@ int main() {
      int x = 0;
      int choice = 3;
      int count = 0;
-     string filename = "";
+     string filename = "graph2.net";
      bool session = true;
      string temp;
      string dummyLine; //Need this to skip the first two lines that are not data
@@ -107,29 +146,25 @@ int main() {
                     getline(myReadFile,dummyLine);//This skips the second line of the file data
                     while(getline(myReadFile, temp)) // delimiter as space
                     {
-                         cout << "Temp: " << temp << endl;
                          stringstream linestream(temp);
-
                          int val1;
                          int val2;
                          linestream >> val1 >> val2;
-                         cout << "Linestream: " << linestream << endl;
-                         cout << "Val1: " << val1 << " Val2: " << val2 << endl;
                          finalString += to_string(val1) + " " + to_string(val2) + " ";
-                         cout << "Entered into Hashtable" << endl;
                     }
                     istringstream stm(finalString);
                     const graph_type<string> graph = create<string>(stm);
                     print(graph);
-                    cout << "Would you like to export this to a file? [Y/N]" << endl;
-                    cin >> answer;
-                    if(answer == "Y"){
-                         cout << "What would you like to name the file?" << endl;
-                         cin >> exportFileName;
-                         ofstream out(exportFileName);
-                         out << print(graph);
-                         out.close();
-                    }
+                    // Fix This
+                    // cout << "Would you like to export this to a file? [Y/N]" << endl;
+                    // cin >> answer;
+                    // if(answer == "Y"){
+                    //      cout << "What would you like to name the file?" << endl;
+                    //      cin >> exportFileName;
+                    //      ofstream out(exportFileName);
+                    //      out << print(graph);
+                    //      out.close();
+                    // }
                }
                myReadFile.close();
           }
